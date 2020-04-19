@@ -1,0 +1,130 @@
+{ 
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "link": {
+      "type": "string",
+      "title": "Link"
+    },
+    "pubDate": {
+      "type": "string",
+      "title": "Publication date",
+      "format": "date-time",
+      "index": true
+    },
+    "guid": {
+      "type": "string",
+      "title": "Guid",
+      "index": true
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "creator": {
+      "type": "string",
+      "title": "Creator"
+    },
+    "subject": {
+      "type": "array",
+      "title": "Subjects",
+      "items": {
+        "type": "string",
+        "title": "Subject"
+      },
+      "index": true
+    },
+    "excerpt": {
+      "type": "string",
+      "title": "Excerpt"
+    },
+    "content": {
+      "type": "string",
+      "title": "Content"
+    },
+    "post_id": {
+      "$id": "#/properties/post_id",
+      "type": "integer",
+      "title": "Post id",
+      "default": 0
+    },
+    "post_date": {
+      "$id": "#/properties/post_date",
+      "type": "string",
+      "title": "Post date",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "post_date_gmt": {
+      "$id": "#/properties/post_date_gmt",
+      "type": "string",
+      "title": "Post Date (GMT)",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "comment_status": {
+      "$id": "#/properties/comment_status",
+      "type": "string",
+      "title": "Comment status",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "ping_status": {
+      "$id": "#/properties/ping_status",
+      "type": "string",
+      "title": "Ping status",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "post_name": {
+      "$id": "#/properties/post_name",
+      "type": "string",
+      "title": "Post name",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "post_parent": {
+      "$id": "#/properties/post_parent",
+      "type": "integer",
+      "title": "Post parent",
+      "default": 0
+    },
+    "status": {
+      "$id": "#/properties/status",
+      "type": "string",
+      "title": "Status",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "post_type": {
+      "$id": "#/properties/post_type",
+      "type": "string",
+      "title": "Post type",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "media": {
+      "title": "Media items",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "URL"
+          },
+          "size": {
+            "type": "number",
+            "title": "Size"
+          },
+          "mimetype": {
+            "type": "string",
+            "title": "MIME type"
+          }
+        }
+      }
+    }
+  }
+}
