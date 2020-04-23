@@ -1,6 +1,4 @@
-const speedometer = require('speedometer')
 const hyperquest = require('hyperquest')
-const { Writable, Readable, Transform, pipeline } = require('stream')
 const p = require('path')
 const pretty = require('pretty-bytes')
 const Client = require('@arso-project/sonar-client')
@@ -11,8 +9,6 @@ const SUBSCRIPTION_NAME = 'sonar.wordpress.import'
 module.exports = async function run (args) {
   const client = new Client(args)
 
-  // await client.ackSubscription(SUBSCRIPTION_NAME, 0)
-  // let finished = false
   while (true) {
     const batch = await client.pullSubscription(SUBSCRIPTION_NAME)
     for (const message of batch.messages) {
@@ -77,12 +73,7 @@ async function onmessage (client, record) {
     console.log('    using resource: ' + record.id)
     console.log('    starting import (' + pretty(size) + ')')
 
-    // const readStream = hyperquest(urlstring)
-    const readStream = new Readable({
-      read () {}
-    })
-    readStream.push(Buffer.from('asdf'))
-    readStream.push(null)
+    const readStream = hyperquest(urlstring)
     reportProgress(readStream, { msg: 'Uploading', total: item.size })
     await client.writeResourceFile(record, readStream)
     console.log('ok')
