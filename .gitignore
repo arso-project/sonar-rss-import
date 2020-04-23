@@ -3,3 +3,5 @@ SANDBOX
 node_modules
 package-lock.json
 pnpm-*
+yarn.lock
+yarn-error.log
