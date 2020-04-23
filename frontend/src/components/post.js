@@ -12,23 +12,32 @@ export default function Post (props) {
       <p>
         <em>{post.value.pubDate}</em>
       </p>
-      <IFrame html={post.value.content} />
-      <p
-        dangerouslySetInnerHTML={{
-          __html: post.value.content
-        }}
-      />
+      <p>
+        {post.value.description}
+      </p>
+      <Iframe html={post.value.content} />
     </div>
   )
 }
 
-function IFrame (props) {
-  const { html, useRef } = props
+function Iframe (props) {
+  const { html } = props
   const ref = useRef()
+  const style = {
+    border: 'none',
+    width: '100%',
+    height: '100%'
+  }
   useEffect(() => {
-    ref.current.write(html)
-  }, [html])
+    if (!ref.current) return
+    if (!ref.current.contentDocument) return
+    let inner = '<base target="_blank">'
+    inner += html
+    ref.current.contentDocument.write(inner)
+    ref.current.style.height = ref.current.contentWindow.document.body.scrollHeight + 'px'
+  }, [html, ref.current, ref.current ? ref.current.contentDocument : null])
+  if (!html) return null
   return (
-    <iframe ref={ref} />
+    <iframe sandbox='allow-same-origin' src='about:blank' style={style} ref={ref} />
   )
 }

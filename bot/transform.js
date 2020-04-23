@@ -11,7 +11,8 @@ const SUBSCRIPTION_NAME = 'sonar.wordpress.import'
 module.exports = async function run (args) {
   const client = new Client(args)
 
-  await client.ackSubscription(SUBSCRIPTION_NAME, 0)
+  // await client.ackSubscription(SUBSCRIPTION_NAME, 0)
+  // let finished = false
   while (true) {
     const batch = await client.pullSubscription(SUBSCRIPTION_NAME)
     for (const message of batch.messages) {
@@ -19,42 +20,17 @@ module.exports = async function run (args) {
       await client.ackSubscription(SUBSCRIPTION_NAME, message.lseq)
     }
     console.log('ok', batch.messages.length, batch.cursor, batch.finished)
-    if (batch.finished) break
-    // if (cursor) await client.ackSubscription(SUBSCRIPTION_NAME, cursor)
-    // if (records.finished) break
-  }
-  console.log('done')
-  return
-  // reset
-  const stream = await client.createSubscriptionStream('sonar.wordpress.import', { schema: SCHEMA })
-  console.log('ok here')
-
-  const target = new Writable({
-    objectMode: true,
-    write (record, enc, next) {
-      console.log('message %s', record.lseq)
-      if (record.schema !== SCHEMA) {
-        console.log('  skip')
-        return done()
-      }
-      onmessage(client, record, done)
-      function done (err, res) {
-        if (err) console.error('error %s: %s', record.lseq, err.message)
-        else console.log('finished %s', record.lseq)
-        stream.write({ cursor: record.lseq })
-        next()
-      }
+    // finished = batch.finished
+    if (batch.finished) {
+      console.log('done, wait and continue')
+      await new Promise(resolve => setTimeout(resolve, 5000))
     }
-  })
-
-  pipeline(stream, target, err => {
-    console.log('finished', err)
-  })
+  }
 }
 
 async function onmessage (client, record) {
-  return true
   const { id, schema, value } = record
+  if (schema !== SCHEMA) return
   const results = []
   const errors = []
   if (value.media && value.media.length) {
@@ -63,8 +39,8 @@ async function onmessage (client, record) {
     for (const item of value.media) {
       i++
       try {
-        // const result = await process(id, item)
-        const result = true
+        const result = await process(id, item)
+        // const result = true
         console.log(`  success (${i} / ${value.media.length})`)
         results.push(result)
       } catch (err) {

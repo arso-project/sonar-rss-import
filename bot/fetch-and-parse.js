@@ -2,16 +2,17 @@ const parser = require('fast-xml-parser')
 const hyperquest = require('hyperquest')
 const collect = require('collect-stream')
 
-module.exports = async function fetchAndParse (path, opts) {
+module.exports = async function fetchAndParse (path, opts = {}) {
   // const { fs } = opts
   let result = await read(path, opts)
   if (Buffer.isBuffer(result)) result = result.toString()
   const parsed = parseXml(result)
+  console.log(parsed)
   const channel = toChannel(parsed)
   return channel
 }
 
-async function read (path, opts) {
+async function read (path, opts = {}) {
   if (path.match(/^https?:\/\//)) {
     return readUrl(path, opts)
   } else {
@@ -19,7 +20,7 @@ async function read (path, opts) {
   }
 }
 
-async function readFile (path, opts) {
+async function readFile (path, opts = {}) {
   const fs = opts.fs || require('fs')
   return new Promise((resolve, reject) => {
     fs.readFile(path, (err, buf) => {
